@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Transition</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; overflow: hidden; }
+        .container { position: relative; width: 300px; height: 200px; margin: auto; overflow: hidden; }
+        .content { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: lightgray; }
+        button { margin-top: 20px; padding: 10px 20px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="content" id="content">Coffee Info</div>
+    </div>
+    <button onclick="changeContent()">Next</button>
+
+    <script>
+        let count = 0;
+        const contentData = ["Coffee Info", "Tea Info", "Juice Info", "Milk Info"];
+
+        function changeContent() {
+            const oldContent = document.getElementById("content");
+            const newContent = document.createElement("div");
+            newContent.className = "content";
+            newContent.innerText = contentData[(count + 1) % contentData.length];
+            newContent.style.transform = "translateY(100%)"; // Start below
+
+            document.querySelector(".container").appendChild(newContent);
+
+            // Animate old content going up and new content coming in
+            gsap.to(oldContent, { y: "-100%", duration: 0.8, ease: "power2.inOut" });
+            gsap.to(newContent, { y: "0%", duration: 0.8, ease: "power2.inOut", onComplete: () => {
+                oldContent.remove(); // Remove old content after animation
+                newContent.id = "content"; // Set new content as active
+            }});
+
+            count++;
+        }
+    </script>
+
+</body>
+</html>
